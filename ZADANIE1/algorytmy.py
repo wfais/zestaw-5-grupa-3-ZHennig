@@ -54,30 +54,89 @@ def shell_sort(array: MonitorowanaTablica):
 
 def merge_sort(array: MonitorowanaTablica, left=None, right=None):
 # twoj kod
-    pass
+    if left is None:
+        left = 0
+    if right is None:
+        right = len(array) - 1
+
+    if left < right:
+        middle = (left + right) // 2
+        merge_sort(array, left, middle)
+        merge_sort(array, middle + 1, right)
+        merge(array, left, middle, right)
 
 
 def merge(array: MonitorowanaTablica, left, middle, right):
     """Merges two sorted subarrays."""
     # twoj kod, moze sie przydac
-    pass
+    left_array = array[left:middle + 1]
+    right_array = array[middle + 1:right + 1]
+
+    i, j, k = 0, 0, left
+    while i < len(left_array) and j < len(right_array):
+        if left_array[i] <= right_array[j]:
+            array[k] = left_array[i]
+            i += 1
+        else:
+            array[k] = right_array[j]
+            j += 1
+        k += 1
+
+    while i < len(left_array):
+        array[k] = left_array[i]
+        i += 1
+        k += 1
+
+    while j < len(right_array):
+        array[k] = right_array[j]
+        j += 1
+        k += 1
 
 
 def quick_sort(array: MonitorowanaTablica, left=None, right=None):
     """Performs quick sort on the given array."""
     # twoj kod
-    pass
+    if left is None:
+        left = 0
+    if right is None:
+        right = len(array) - 1
+    
+    if left >= right:
+        return
+    pivot_index = partition(array, left, right)
+    quick_sort(array, left, pivot_index - 1)
+    quick_sort(array, pivot_index + 1, right)
 
 
 def partition(array: MonitorowanaTablica, left, right):
     """Partitions the array into two parts."""
     # twoj kod, moze sie przydac
-    pass
+    pivot = array[right]
+    i = left
+    for j in range(left, right):
+        if array[j] <= pivot:
+            array[i], array[j] = array[j], array[i]
+            i += 1
+    array[i], array[right] = array[right], array[i]
+    return i
 
 
 def tim_sort(array: MonitorowanaTablica):
 # twoj kod
-    pass
+    min_run = 32
+    n = len(array)
+
+    for i in range(0, n, min_run):
+        insertion_sort(array, i, min(i + min_run - 1, n - 1))
+
+    size = min_run
+    while size < n:
+        for left in range(0, n, size*2):
+            middle = left + size - 1
+            right = min(left + size*2 - 1, n - 1)
+            if middle < right: # merge jesli istnieje druga podtablica
+                merge(array, left, middle, right)
+        size *= 2
 
 
 
@@ -85,7 +144,7 @@ algorytmy = [
     (insertion_sort, "Insertion Sort"),
     (bubble_sort, "Bubble Sort"),
     (shell_sort, "Shell Sort"),
-    # (merge_sort, "Merge Sort"),
-    # (quick_sort, "Quick Sort"),
-    # (tim_sort, "Tim Sort"),
+    (merge_sort, "Merge Sort"),
+    (quick_sort, "Quick Sort"),
+    (tim_sort, "Tim Sort"),
 ]
